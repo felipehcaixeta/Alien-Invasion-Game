@@ -14,3 +14,6 @@ class Settings:
         self.bg_img = pygame.transform.smoothscale(
             original_bg_img, (self.screen_width, self.screen_height)
         )
+
+        # Ship settings
+        self.ship_speed = 1.5
