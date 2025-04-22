@@ -25,10 +25,12 @@ class Settings:
         self.bullet_speed = 3.0
         self.bullet_width = 3
         self.bullet_height = 15
-        self.bullet_color = (60, 60, 60)
+        self.bullet_color = (139, 0, 0)
+        self.bullets_allowed = 10
 
     def _toggle_fullscreen(self):
         '''Toggle between fullscreen and windowed mode'''
+        # TODO: This is still buggy. Need to fix the ships' position while in fullscreen.
         if self.fullscreen:
             self.screen = pygame.display.set_mode(
             (self.default_screen_width, self.default_screen_height)
