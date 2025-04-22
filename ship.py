@@ -12,7 +12,7 @@ class Ship():
         # Load the ship image and get its rect.
         self.ship_width = 60
         self.ship_height = 100
-        space_ship = pygame.image.load("images/ship.png")
+        space_ship = pygame.image.load('images/ship1.png')
         self.ship = pygame.transform.smoothscale(
             space_ship, (self.ship_width, self.ship_height)
         )
@@ -41,3 +41,8 @@ class Ship():
     def blitme(self):
         '''Draw the ship at its current position'''
         self.screen.blit(self.ship, self.rect)
+
+    def center_ship(self):
+        '''Center the ship on the screen'''
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
