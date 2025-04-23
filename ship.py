@@ -11,8 +11,8 @@ class Ship():
 
         # Load the ship image and get its rect.
         self.ship_width = 60
-        self.ship_height = 100
-        space_ship = pygame.image.load('images/ship1.png')
+        self.ship_height = 80
+        space_ship = pygame.image.load('images/ship.bmp')
         self.ship = pygame.transform.smoothscale(
             space_ship, (self.ship_width, self.ship_height)
         )
