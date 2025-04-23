@@ -13,7 +13,7 @@ class Button:
         self.hover_width, self.hover_height = 220, 85
         self.width, self.height = self.original_width, self.original_height
         self.button_color = (55, 20, 70)  # Dark Purple
-        self.text_color = (255, 165, 0)  # Orange
+        self.text_color = (255, 115, 0)  # Orange
         self.font = pygame.font.SysFont('comicsansms', 42)  # Font style and size
         self.radius = 10
 

@@ -6,6 +6,7 @@ from alien import Alien
 from time import sleep
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 
 class AlienInvasion:
     '''Overall class to manage game assets and behavior.'''
@@ -21,8 +22,10 @@ class AlienInvasion:
         )
         pygame.display.set_caption('Alien Invasion')
 
-        # Create an instance to store game statistics
+        # Create an instance to store game statistics,
+        #   and create a scoreboard
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -97,9 +100,10 @@ class AlienInvasion:
         if button_clicked and not self.game_active:
             # Reset game settings
             self.settings.initialize_dynamic_settings()
-            
+
             # Reset game statistics
             self.stats.reset_stats()
+            self.sb.prep_score()
             self.game_active = True
 
             # Get rid of any remaining bullets and aliens
@@ -135,6 +139,11 @@ class AlienInvasion:
         '''Respond to bullet-alien collision'''
         # Remove any bullets and aliens that have collided
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
 
         if not self.aliens:
             # Destroy existing bullets and create new fleet
@@ -192,10 +201,9 @@ class AlienInvasion:
     #         current_y += 2 * alien_height
     
     def _create_alien(self):
-        '''Create an alien with random coordinates'''
+        '''Create an alien with random coordinates within screen bounds'''
         new_alien = Alien(self)
-        new_alien.x = random.randint(0, 1200)
-        new_alien.rect.x = random.randint(0, 1200)
+        new_alien.rect.x = random.randint(10, 1140)
         new_alien.rect.y = random.randint(0,400)
         self.aliens.add(new_alien)
 
@@ -229,6 +237,9 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.ship.blitme()
         self.aliens.draw(self.screen)
+
+        # Draw score information
+        self.sb.show_score()
 
         # Draw the play button if the game is inactive
         if not self.game_active:
