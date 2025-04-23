@@ -29,6 +29,7 @@ class Button:
 
         if self.rect.collidepoint(mouse_pos):
             self.width, self.height = self.hover_width, self.hover_height
+            self.radius = 30
         else:
             self.width, self.height = self.original_width, self.original_height
 
