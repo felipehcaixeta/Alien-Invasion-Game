@@ -1,4 +1,4 @@
-import pygame, random
+import pygame
 from pygame.sprite import Sprite
 
 class Alien(Sprite):
@@ -20,8 +20,8 @@ class Alien(Sprite):
         self.rect = self.image.get_rect()
         # print(f'Alien rect dimensions: {self.rect.width} x {self.rect.height}')
         
-        # Store the alien's exact horizontal position
-        self.x = float(self.rect.x)
+        # Store the alien's exact vertical position
+        self.y = float(self.rect.y)
 
     def check_edges(self):
         '''Return True if alien is at edge of screen'''
@@ -29,8 +29,11 @@ class Alien(Sprite):
         return (self.rect.right >= screen_rect.right) or (self.rect.left <= 0)
 
     def update(self):
-        '''Move the alien right or left'''
-        self.x += self.settings.alien_speed * self.settings.fleet_direction
+        '''Move the alien straight down the screen'''
+        self.y += self.settings.alien_speed
+        self.rect.y = self.y
+
+        # self.x += self.settings.alien_speed * self.settings.fleet_direction
         # self.rect.x = self.x
 
         

@@ -1,9 +1,8 @@
-import sys, pygame, random
+import sys, pygame, random, time
 from settings import Settings
 from ship import Ship
 from  bullet import Bullet
 from alien import Alien
-from time import sleep
 from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
@@ -42,6 +41,10 @@ class AlienInvasion:
 
         # Make Play button
         self.play_button = Button(self, "Play")
+
+        # Timer for alien spawning
+        self.last_alien_spawn_time = time.time()
+        self.alien_spawn_delay = random.uniform(1, 6)
     
     def run_game(self):
         '''Start the main loop for the game.'''
@@ -52,6 +55,7 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+                self.random_alien_spawn()
 
             self._update_screen()    
             self.clock.tick(60)  # Set target framerate
@@ -90,6 +94,7 @@ class AlienInvasion:
             self.ship.moving_left = False
 
     def _play_button_hover(self, mouse_pos):
+        '''Enlarge Play button when the mouse hovers over it'''
         mouse_pos = pygame.mouse.get_pos()
         self.play_button.update(mouse_pos)
         self.play_button.draw_button()
@@ -157,12 +162,27 @@ class AlienInvasion:
             # Increase level
             self.stats.level += 1
             self.sb.prep_level()
+
+    def random_alien_spawn(self):
+        '''Randomly creates new aliens'''
+        current_time = time.time()
+        if current_time - self.last_alien_spawn_time > self.alien_spawn_delay:
+            self._create_alien()
+
+            # Reset timer and generate a new random delay
+            self.last_alien_spawn_time = current_time
+            self.alien_spawn_delay = random.uniform(1, 6)
+
+    def _create_alien(self):
+        '''Create an alien with random coordinates within screen bounds'''
+        new_alien = Alien(self)
+        new_alien.rect.x = random.randint(10, 1140)
+        new_alien.rect.y = random.randint(0,400)
+        self.aliens.add(new_alien)
     
     def _update_aliens(self):
-        '''Check if the fleet is at an edge, then update positions'''
-        # self._check_fleet_edges()
-        # self.aliens.update()
-
+        '''Update collision status'''
+        
         # Look for alien-ship collisions
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
@@ -182,14 +202,17 @@ class AlienInvasion:
             self.aliens.empty()
 
             # Create a new fleet and center the ship
-            self._create_alien()  # This has been edited from self._create_fleet()
+            # self._create_alien()  # This has been edited from self._create_fleet()
             self.ship.center_ship()
 
             # Pause
-            sleep(1)
+            time.sleep(1)
         else:
             self.game_active = False
             pygame.mouse.set_visible(True)
+
+    def _alien_movement(self):
+        pass
 
     # def _create_fleet(self):
     #     '''Create the fleet of aliens'''
@@ -208,12 +231,7 @@ class AlienInvasion:
     #         current_x = alien_width
     #         current_y += 2 * alien_height
     
-    def _create_alien(self):
-        '''Create an alien with random coordinates within screen bounds'''
-        new_alien = Alien(self)
-        new_alien.rect.x = random.randint(10, 1140)
-        new_alien.rect.y = random.randint(0,400)
-        self.aliens.add(new_alien)
+    
 
     '''Will be unecessary since I just want the aliens to drop straight down'''
     # def _check_fleet_edges(self):
@@ -255,6 +273,7 @@ class AlienInvasion:
             self.play_button.update(mouse_pos)
             self.play_button.draw_button()
 
+        self.aliens.update()
         pygame.display.flip()
 
 if __name__ == '__main__':
