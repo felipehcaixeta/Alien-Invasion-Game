@@ -45,6 +45,9 @@ class AlienInvasion:
         # Timer for alien spawning
         self.last_alien_spawn_time = time.time()
         self.alien_spawn_delay = random.uniform(1, 6)
+
+        # Tracks amount of aliens
+        self.offscreen_aliens = []
     
     def run_game(self):
         '''Start the main loop for the game.'''
@@ -163,6 +166,7 @@ class AlienInvasion:
             self.stats.level += 1
             self.sb.prep_level()
 
+    #region SpawnRandomAliens
     def random_alien_spawn(self):
         '''Randomly creates new aliens'''
         current_time = time.time()
@@ -179,16 +183,20 @@ class AlienInvasion:
         new_alien.rect.x = random.randint(10, 1140)
         new_alien.rect.y = random.randint(0,400)
         self.aliens.add(new_alien)
+    #endregion
     
     def _update_aliens(self):
-        '''Update collision status'''
+        '''Update collision status and show alien count offscreen'''
         
         # Look for alien-ship collisions
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
 
         # Look for aliens hitting the bottom of the screen
-        self._check_aliens_bottom()
+        # self._check_aliens_bottom()
+
+        # Print aliens that go offscreen
+        self._track_aliens()
     
     def _ship_hit(self):
         '''Respond to the ship being hit by an alien'''
@@ -202,7 +210,7 @@ class AlienInvasion:
             self.aliens.empty()
 
             # Create a new fleet and center the ship
-            # self._create_alien()  # This has been edited from self._create_fleet()
+            # self._create_alien()
             self.ship.center_ship()
 
             # Pause
@@ -211,50 +219,35 @@ class AlienInvasion:
             self.game_active = False
             pygame.mouse.set_visible(True)
 
-    def _alien_movement(self):
-        pass
+    #region OffscreenAliens
+    def _remove_offscreen_aliens(self):
+        '''Remove alien that go offscreen'''
+        for alien in self.offscreen_aliens.copy():
+            self.aliens.remove(alien)
 
-    # def _create_fleet(self):
-    #     '''Create the fleet of aliens'''
-    #     # Create an alien and keep adding aliens until there is no room left
-    #     # Spacing between aliens is one alien width and one alien height
-    #     alien = Alien(self)
-    #     alien_width, alien_height = alien.rect.size
+        self.offscreen_aliens.clear()
 
-    #     current_x, current_y = alien_width, alien_height
-    #     while current_y < (self.settings.screen_height - 3 * alien_height):
-    #         while current_x < (self.settings.screen_width - 2 * alien_width):
-    #             self._create_alien(current_x, current_y)
-    #             current_x += 2 * alien_width
-
-    #         # Finished a row; reset x value, and increment y value
-    #         current_x = alien_width
-    #         current_y += 2 * alien_height
-    
-    
-
-    '''Will be unecessary since I just want the aliens to drop straight down'''
-    # def _check_fleet_edges(self):
-    #     '''Respond appropriately if any aliens have reached an edge'''
-    #     for alien in self.aliens.sprites():
-    #         if alien.check_edges():
-    #             self._change_fleet_direction()
-    #             break
-
-    '''Will be unecessary since I just want the aliens to drop straight down'''
-    # def _change_fleet_direction(self):
-    #     '''Drop the entire fleet and change the fleet's direction'''
-    #     for alien in self.aliens.sprites():
-    #         alien.rect.y += self.settings.fleet_drop_speed
-    #     self.settings.fleet_direction *= -1
-
-    def _check_aliens_bottom(self):
-        '''Check if any aliens have reached the bottom of the screen'''
-        for alien in self.aliens.sprites():
+    def _track_aliens(self):
+        '''Keep track of the amount of aliens offscreen'''
+        for alien in self.aliens.copy():
             if alien.rect.bottom >= self.settings.screen_height:
-                # Treat this the same as if the ship got hit
-                self._ship_hit()
-                break
+                if alien not in self.offscreen_aliens:
+                    self.offscreen_aliens.append(alien)
+
+        print(len(self.offscreen_aliens))  # Shows number of aliens that are offscreen
+
+        self._remove_offscreen_aliens()  # Deletes the alien in the list
+    
+    #endregion
+
+    '''Disconsider this for now'''
+    # def _check_aliens_bottom(self):
+    #     '''Check if any aliens have reached the bottom of the screen'''
+    #     for alien in self.aliens.sprites():
+    #         if alien.rect.bottom >= self.settings.screen_height:
+    #             # Treat this the same as if the ship got hit
+    #             self._ship_hit()
+    #             break
 
     def _update_screen(self):
         '''Update images on the screen, and flip to the new screen'''
