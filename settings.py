@@ -13,14 +13,14 @@ class Settings:
         self.fullscreen = False  # Keep track of fullscreen mode
 
         # Set the background image.
-        self.original_bg_img = pygame.image.load("images/background_img_alien_inv.png")
+        self.original_bg_img = pygame.image.load("images/bg_image.jpg")
         self.bg_img = pygame.transform.smoothscale(
             self.original_bg_img, (self.screen_width, self.screen_height)
         )
 
         # Ship settings
         self.ship_speed = 6  # Obsolete because initialize_dynamic_settings overrides
-        self.ship_limit = 1
+        self.ship_limit = 2
         # TODO: Add a turbo speed when hold down CTRL + Direction
 
         # Bullet settings

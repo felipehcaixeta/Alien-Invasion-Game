@@ -13,6 +13,7 @@ class AlienInvasion:
     def __init__(self):
         '''Initialize the game, and create game resources.'''
         pygame.init()
+        pygame.mixer.init()
         
         self.clock = pygame.time.Clock()
         self.settings = Settings()
@@ -48,6 +49,12 @@ class AlienInvasion:
 
         # Tracks amount of aliens
         self.offscreen_aliens = []
+
+        # Sound effects & music
+        self.bullet_sound = pygame.mixer.Sound('sounds/bullet.wav')
+        self.explosion_sound = pygame.mixer.Sound('sounds/explosion.wav')
+        pygame.mixer.music.load('sounds/bg_music.wav')
+        pygame.mixer.music.play(-1)
     
     def run_game(self):
         '''Start the main loop for the game.'''
@@ -132,6 +139,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            self.bullet_sound.play()
 
     def _update_bullets(self):
         '''Update position of bullets and get rid of old bullets'''
@@ -151,6 +159,7 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if collisions:
+            self.explosion_sound.play()
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
@@ -184,7 +193,7 @@ class AlienInvasion:
         # Spawn alien in a random x, y coordinate
         # But no lower than the middle of the screen
         new_alien.rect.x = random.randint(10, 1140)
-        new_alien.rect.y = random.randint(0,400)
+        new_alien.rect.y = random.randint(0,400)  # It's always adding to 0 for some reason
         self.aliens.add(new_alien)
     #endregion
     
