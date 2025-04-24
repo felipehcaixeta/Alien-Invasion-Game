@@ -28,12 +28,12 @@ class Alien(Sprite):
         screen_rect = self.screen.get_rect()
         return (self.rect.right >= screen_rect.right) or (self.rect.left <= 0)
 
+    #region AlienMovement
     def update(self):
         '''Move the alien straight down the screen'''
         self.y += self.settings.alien_speed
         self.rect.y = self.y
-
-        # self.x += self.settings.alien_speed * self.settings.fleet_direction
-        # self.rect.x = self.x
+    #endregion
+   
 
         

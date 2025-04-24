@@ -58,7 +58,7 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
-                self.random_alien_spawn()
+                self._delayed_alien_spawn()
 
             self._update_screen()    
             self.clock.tick(60)  # Set target framerate
@@ -167,8 +167,8 @@ class AlienInvasion:
             self.sb.prep_level()
 
     #region SpawnRandomAliens
-    def random_alien_spawn(self):
-        '''Randomly creates new aliens'''
+    def _delayed_alien_spawn(self):
+        '''Creates new aliens at random intervals'''
         current_time = time.time()
         if current_time - self.last_alien_spawn_time > self.alien_spawn_delay:
             self._create_alien()
@@ -180,6 +180,9 @@ class AlienInvasion:
     def _create_alien(self):
         '''Create an alien with random coordinates within screen bounds'''
         new_alien = Alien(self)
+
+        # Spawn alien in a random x, y coordinate
+        # But no lower than the middle of the screen
         new_alien.rect.x = random.randint(10, 1140)
         new_alien.rect.y = random.randint(0,400)
         self.aliens.add(new_alien)
