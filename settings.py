@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 
 class Settings:
     '''A class to store all settings for Alien Invasion.'''
@@ -12,8 +12,12 @@ class Settings:
         self.screen_height = self.default_screen_height
         self.fullscreen = False  # Keep track of fullscreen mode
 
+        # Ensure files are found regardless of machine or file location
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        img_path = os.path.join(script_dir, "images", "bg_image.jpg")
+
         # Set the background image.
-        self.original_bg_img = pygame.image.load("images/bg_image.jpg")
+        self.original_bg_img = pygame.image.load(img_path)
         self.bg_img = pygame.transform.smoothscale(
             self.original_bg_img, (self.screen_width, self.screen_height)
         )

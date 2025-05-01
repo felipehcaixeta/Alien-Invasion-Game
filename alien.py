@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.sprite import Sprite
 
 class Alien(Sprite):
@@ -9,10 +9,14 @@ class Alien(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings
 
+        # Ensure files are found regardless of machine or file location
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        img_path = os.path.join(script_dir, "images", "aliennn.bmp")
+
         # Load the alien image and set its rect attribute
         self.alien_width = 60
         self.alien_height = 70
-        self.image = pygame.image.load('images/aliennn.bmp')
+        self.image = pygame.image.load(img_path)
         self.alien = pygame.transform.smoothscale(
             self.image, (self.alien_width, self.alien_height)
         )

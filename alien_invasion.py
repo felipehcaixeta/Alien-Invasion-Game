@@ -1,4 +1,4 @@
-import sys, pygame, random, time
+import sys, pygame, random, time, os
 from settings import Settings
 from ship import Ship
 from  bullet import Bullet
@@ -50,10 +50,16 @@ class AlienInvasion:
         # Tracks amount of aliens
         self.offscreen_aliens = []
 
+        # Ensure files are found regardless of machine or file location
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        sound_bullet_path = os.path.join(script_dir, 'sounds', 'bullet.wav')
+        sound_explosion_path = os.path.join(script_dir, 'sounds', 'explosion.wav')
+        bgm_path = os.path.join(script_dir, 'sounds', 'bg_music.wav')
+
         # Sound effects & music
-        self.bullet_sound = pygame.mixer.Sound('sounds/bullet.wav')
-        self.explosion_sound = pygame.mixer.Sound('sounds/explosion.wav')
-        pygame.mixer.music.load('sounds/bg_music.wav')
+        self.bullet_sound = pygame.mixer.Sound(sound_bullet_path)
+        self.explosion_sound = pygame.mixer.Sound(sound_explosion_path)
+        pygame.mixer.music.load(bgm_path)
         pygame.mixer.music.play(-1)
     
     def run_game(self):

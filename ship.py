@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.sprite import Sprite
 
 class Ship():
@@ -11,10 +11,14 @@ class Ship():
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
 
+        # Ensure files are found regardless of machine or file location
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        img_path = os.path.join(script_dir, "images", "ship.bmp")
+
         # Load the ship image and get its rect.
         self.ship_width = 60
         self.ship_height = 70
-        space_ship = pygame.image.load('images/ship.bmp')
+        space_ship = pygame.image.load(img_path)
         self.ship = pygame.transform.smoothscale(
             space_ship, (self.ship_width, self.ship_height)
         )
