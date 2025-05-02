@@ -24,7 +24,7 @@ class Settings:
 
         # Ship settings
         self.ship_speed = 6  # Obsolete because initialize_dynamic_settings overrides
-        self.ship_limit = 2
+        self.ship_limit = 3
         # TODO: Add a turbo speed when hold down CTRL + Direction
 
         # Bullet settings
